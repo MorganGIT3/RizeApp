@@ -247,6 +247,92 @@ export const getCurrentUser = async () => {
   }
 }
 
+// Interface pour le profil utilisateur avec dates d'accompagnement
+export interface UserProfile {
+  id: string
+  user_id: string
+  email: string | null
+  full_name: string | null
+  accompaniment_start_date: string | null
+  accompaniment_end_date: string | null
+  created_at: string
+  updated_at: string
+}
+
+// Récupérer le profil utilisateur avec les dates d'accompagnement
+export const getUserProfile = async (): Promise<UserProfile | null> => {
+  try {
+    const user = await getCurrentUser()
+    if (!user) {
+      return null
+    }
+
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', user.id)
+      .single()
+
+    if (error) {
+      console.error('Erreur lors de la récupération du profil:', error)
+      return null
+    }
+
+    return data
+  } catch (error) {
+    console.error('Erreur dans getUserProfile:', error)
+    return null
+  }
+}
+
+// Fonction pour mettre à jour les dates d'accompagnement (admin seulement)
+export const updateUserAccompanimentDates = async (
+  userId: string, 
+  startDate: string | null, 
+  endDate: string | null
+): Promise<{ success: boolean; error?: string }> => {
+  try {
+    const { error } = await supabase
+      .from('user_profiles')
+      .update({
+        accompaniment_start_date: startDate,
+        accompaniment_end_date: endDate,
+        updated_at: new Date().toISOString()
+      })
+      .eq('user_id', userId)
+
+    if (error) {
+      console.error('Erreur lors de la mise à jour des dates:', error)
+      return { success: false, error: error.message }
+    }
+
+    return { success: true }
+  } catch (error: any) {
+    console.error('Erreur dans updateUserAccompanimentDates:', error)
+    return { success: false, error: error.message }
+  }
+}
+
+// Récupérer tous les profils utilisateurs (admin seulement)
+export const getAllUserProfiles = async (): Promise<UserProfile[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('Erreur lors de la récupération des profils:', error)
+      return []
+    }
+
+    return data || []
+  } catch (error) {
+    console.error('Erreur dans getAllUserProfiles:', error)
+    return []
+  }
+}
+
 // ===== FONCTIONS CALENDRIER =====
 
 // Interface pour les événements du calendrier

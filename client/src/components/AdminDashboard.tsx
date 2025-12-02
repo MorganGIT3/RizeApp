@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getCurrentAdminSession, logoutAdmin, supabase } from '@/lib/supabase';
+import { getCurrentAdminSession, logoutAdmin, supabase, getAllUserProfiles, updateUserAccompanimentDates, UserProfile as UserProfileType } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Shield, Phone, TrendingUp, Users, Calendar, Plus, Minus, BarChart3, RefreshCw, Mail, UserCircle2, Clock, ChevronDown, ChevronUp } from 'lucide-react';
+import { LogOut, Shield, Phone, TrendingUp, Users, Calendar, Plus, Minus, BarChart3, RefreshCw, Mail, UserCircle2, Clock, ChevronDown, ChevronUp, Edit2, Save, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
@@ -26,10 +26,13 @@ interface AdminCallStats {
 
 interface UserProfile {
   id: string;
+  user_id?: string;
   email: string;
   full_name: string;
   created_at: string;
   total_calls: number;
+  accompaniment_start_date?: string | null;
+  accompaniment_end_date?: string | null;
 }
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6'];
@@ -44,6 +47,10 @@ export function AdminDashboard() {
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isUsersExpanded, setIsUsersExpanded] = useState(false);
+  const [editingUserId, setEditingUserId] = useState<string | null>(null);
+  const [editStartDate, setEditStartDate] = useState<string>('');
+  const [editEndDate, setEditEndDate] = useState<string>('');
+  const [isSavingDates, setIsSavingDates] = useState(false);
 
   useEffect(() => {
     const session = getCurrentAdminSession();
@@ -206,20 +213,26 @@ export function AdminDashboard() {
 
           usersWithCalls.push({
             id: profile.user_id || profile.id || 'unknown',
+            user_id: profile.user_id,
             email: profile.email || 'Non renseigné',
             full_name: profile.full_name || profile.email?.split('@')[0] || 'Utilisateur',
             created_at: profile.created_at || new Date().toISOString(),
-            total_calls: calls?.length || 0
+            total_calls: calls?.length || 0,
+            accompaniment_start_date: profile.accompaniment_start_date || null,
+            accompaniment_end_date: profile.accompaniment_end_date || null
           });
         } catch (callError) {
           console.log('Erreur chargement appels pour un user:', callError);
           // Ajouter quand même l'utilisateur sans ses appels
           usersWithCalls.push({
             id: profile.user_id || profile.id || 'unknown',
+            user_id: profile.user_id,
             email: profile.email || 'Non renseigné',
             full_name: profile.full_name || profile.email?.split('@')[0] || 'Utilisateur',
             created_at: profile.created_at || new Date().toISOString(),
-            total_calls: 0
+            total_calls: 0,
+            accompaniment_start_date: profile.accompaniment_start_date || null,
+            accompaniment_end_date: profile.accompaniment_end_date || null
           });
         }
       }
@@ -343,6 +356,41 @@ export function AdminDashboard() {
     setIsRefreshing(true);
     await loadUsers();
     setTimeout(() => setIsRefreshing(false), 500);
+  };
+
+  const handleEditDates = (user: UserProfile) => {
+    setEditingUserId(user.user_id || user.id);
+    setEditStartDate(user.accompaniment_start_date ? new Date(user.accompaniment_start_date).toISOString().split('T')[0] : '');
+    setEditEndDate(user.accompaniment_end_date ? new Date(user.accompaniment_end_date).toISOString().split('T')[0] : '');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingUserId(null);
+    setEditStartDate('');
+    setEditEndDate('');
+  };
+
+  const handleSaveDates = async (userId: string) => {
+    setIsSavingDates(true);
+    try {
+      const result = await updateUserAccompanimentDates(
+        userId,
+        editStartDate || null,
+        editEndDate || null
+      );
+
+      if (result.success) {
+        await loadUsers();
+        handleCancelEdit();
+      } else {
+        alert('Erreur lors de la sauvegarde: ' + (result.error || 'Erreur inconnue'));
+      }
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde des dates:', error);
+      alert('Erreur lors de la sauvegarde des dates');
+    } finally {
+      setIsSavingDates(false);
+    }
   };
 
   if (isLoading) {
@@ -691,78 +739,146 @@ export function AdminDashboard() {
                       transition={{ delay: index * 0.05 }}
                       className="bg-gray-700/30 rounded-lg p-4 border border-gray-700/50 hover:border-blue-500/50 hover:bg-gray-700/50 transition-all"
                     >
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
-                        {/* Colonne 1 : Avatar + Nom */}
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
-                            {user.full_name.charAt(0).toUpperCase()}
-                          </div>
-                          <div>
-                            <div className="text-white font-medium flex items-center gap-2">
-                              {user.full_name}
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+                          {/* Colonne 1 : Avatar + Nom */}
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
+                              {user.full_name.charAt(0).toUpperCase()}
                             </div>
-                            <div className="text-gray-400 text-sm flex items-center gap-1 mt-1">
-                              <Mail className="w-3 h-3" />
-                              {user.email}
+                            <div>
+                              <div className="text-white font-medium flex items-center gap-2">
+                                {user.full_name}
+                              </div>
+                              <div className="text-gray-400 text-sm flex items-center gap-1 mt-1">
+                                <Mail className="w-3 h-3" />
+                                {user.email}
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        {/* Colonne 2 : Date d'inscription */}
-                        <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-blue-400" />
-                          <div>
-                            <div className="text-xs text-gray-500 uppercase">Inscrit le</div>
-                            <div className="text-white font-medium">
-                              {new Date(user.created_at).toLocaleDateString('fr-FR', {
-                                day: '2-digit',
-                                month: 'long',
-                                year: 'numeric'
-                              })}
-                            </div>
-                            <div className="text-gray-400 text-xs">
-                              à {new Date(user.created_at).toLocaleTimeString('fr-FR', {
-                                hour: '2-digit',
-                                minute: '2-digit'
-                              })}
+                          {/* Colonne 2 : Date d'inscription */}
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-blue-400" />
+                            <div>
+                              <div className="text-xs text-gray-500 uppercase">Inscrit le</div>
+                              <div className="text-white font-medium text-sm">
+                                {new Date(user.created_at).toLocaleDateString('fr-FR', {
+                                  day: '2-digit',
+                                  month: 'short',
+                                  year: 'numeric'
+                                })}
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        {/* Colonne 3 : Nombre d'appels */}
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4 text-green-400" />
-                          <div>
-                            <div className="text-xs text-gray-500 uppercase">Appels réservés</div>
-                            <div className="text-2xl font-bold text-green-400">
-                              {user.total_calls}
-                            </div>
-                            <div className="text-gray-400 text-xs">
-                              {user.total_calls === 0 && 'Aucun appel'}
-                              {user.total_calls === 1 && '1 appel réservé'}
-                              {user.total_calls > 1 && `${user.total_calls} appels réservés`}
+                          {/* Colonne 3 : Nombre d'appels */}
+                          <div className="flex items-center gap-2">
+                            <Phone className="w-4 h-4 text-green-400" />
+                            <div>
+                              <div className="text-xs text-gray-500 uppercase">Appels</div>
+                              <div className="text-xl font-bold text-green-400">
+                                {user.total_calls}
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        {/* Colonne 4 : Statut */}
-                        <div className="flex justify-end">
-                          <div className="text-center">
-                            {user.total_calls > 0 ? (
-                              <Badge className="bg-green-500 text-white">
-                                ✓ Actif
-                              </Badge>
+                          {/* Colonne 4 : Dates d'accompagnement */}
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-purple-400" />
+                            <div className="flex-1">
+                              <div className="text-xs text-gray-500 uppercase">Accompagnement</div>
+                              {editingUserId === (user.user_id || user.id) ? (
+                                <div className="text-white text-xs">
+                                  En édition...
+                                </div>
+                              ) : (
+                                <div className="text-white text-xs">
+                                  {user.accompaniment_start_date 
+                                    ? new Date(user.accompaniment_start_date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' })
+                                    : 'Non défini'}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Colonne 5 : Actions */}
+                          <div className="flex justify-end gap-2">
+                            {editingUserId === (user.user_id || user.id) ? (
+                              <>
+                                <Button
+                                  onClick={() => handleSaveDates(user.user_id || user.id)}
+                                  disabled={isSavingDates}
+                                  size="sm"
+                                  className="bg-green-500 hover:bg-green-600 text-white"
+                                >
+                                  <Save className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  onClick={handleCancelEdit}
+                                  disabled={isSavingDates}
+                                  size="sm"
+                                  variant="outline"
+                                  className="border-red-500 text-red-400 hover:bg-red-500 hover:text-white"
+                                >
+                                  <X className="w-4 h-4" />
+                                </Button>
+                              </>
                             ) : (
-                              <Badge variant="secondary" className="bg-gray-600 text-gray-300">
-                                En attente
-                              </Badge>
+                              <Button
+                                onClick={() => handleEditDates(user)}
+                                size="sm"
+                                variant="outline"
+                                className="border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white"
+                              >
+                                <Edit2 className="w-4 h-4 mr-1" />
+                                Dates
+                              </Button>
                             )}
-                            <div className="text-xs text-gray-500 mt-2">
-                              ID: {user.id.slice(0, 8)}...
-                            </div>
                           </div>
-                </div>
-              </div>
+                        </div>
+
+                        {/* Section d'édition des dates */}
+                        {editingUserId === (user.user_id || user.id) && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="mt-4 pt-4 border-t border-gray-700 space-y-3"
+                          >
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                <label className="block text-xs text-gray-400 mb-1">
+                                  Date de début d'accompagnement
+                                </label>
+                                <input
+                                  type="date"
+                                  value={editStartDate}
+                                  onChange={(e) => setEditStartDate(e.target.value)}
+                                  className="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-xs text-gray-400 mb-1">
+                                  Date de fin d'accompagnement
+                                </label>
+                                <input
+                                  type="date"
+                                  value={editEndDate}
+                                  onChange={(e) => setEditEndDate(e.target.value)}
+                                  className="w-full px-3 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                />
+                              </div>
+                            </div>
+                            {isSavingDates && (
+                              <div className="text-xs text-blue-400 flex items-center gap-2">
+                                <RefreshCw className="w-3 h-3 animate-spin" />
+                                Sauvegarde en cours...
+                              </div>
+                            )}
+                          </motion.div>
+                        )}
+                      </div>
                     </motion.div>
                   ))}
                 </div>

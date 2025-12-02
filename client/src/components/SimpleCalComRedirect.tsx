@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { Calendar, Phone, AlertCircle } from "lucide-react"
+import { DigitalSerenityBackground } from "./DigitalSerenityBackground"
 
 export function SimpleCalComRedirect() {
   const [showConfirmation, setShowConfirmation] = useState(false)
@@ -22,8 +23,9 @@ export function SimpleCalComRedirect() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-900 via-black to-slate-800" style={{ overflow: 'hidden', height: '100vh' }}>
+      {/* Fond DigitalSerenity */}
+      <DigitalSerenityBackground />
 
       {/* Contenu principal */}
       <div className="relative z-10 flex items-center justify-center min-h-screen p-8">
@@ -33,14 +35,45 @@ export function SimpleCalComRedirect() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-2xl"
         >
-          {/* Icône animée */}
+          {/* Icône animée avec LEDs */}
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.5, type: "spring", bounce: 0.5 }}
-            className="mb-8 mx-auto w-32 h-32 bg-gradient-to-br from-blue-500 to-blue-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/50"
+            className="relative mb-8 mx-auto w-32 h-32 rounded-3xl flex items-center justify-center"
+            style={{
+              background: 'radial-gradient(circle 280px at 0% 0%, rgba(68, 68, 68, 0.3), rgba(12, 13, 13, 1))',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.08), 0 4px 12px rgba(0, 0, 0, 0.6)'
+            }}
           >
-            <Phone className="h-16 w-16 text-white" />
+            {/* LED animée autour de l'icône */}
+            <motion.div
+              className="absolute -inset-[2px] rounded-3xl"
+              style={{
+                background: 'radial-gradient(circle 230px at 0% 0%, rgba(255, 255, 255, 0.1), rgba(12, 13, 13, 0.9))',
+              }}
+              animate={{
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut'
+              }}
+            />
+            {/* Grille de fond */}
+            <div 
+              className="absolute inset-0 rounded-3xl opacity-5"
+              style={{
+                backgroundImage: `
+                  linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                  linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 1px, transparent 1px)
+                `,
+                backgroundSize: '10px 10px'
+              }}
+            />
+            <Phone className="h-16 w-16 text-white relative z-10" />
           </motion.div>
 
           {/* Titre */}
@@ -48,7 +81,7 @@ export function SimpleCalComRedirect() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-5xl md:text-6xl font-bold text-white mb-6"
+            className="text-4xl sm:text-5xl md:text-6xl font-extralight leading-tight tracking-tight text-slate-50 mb-6"
           >
             Réserve tes appels de la semaine
           </motion.h1>
@@ -57,12 +90,12 @@ export function SimpleCalComRedirect() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-xl text-gray-300 mb-12"
+            className="text-xl text-white/60 mb-12"
           >
             Un moment privilégié pour échanger et avancer ensemble
           </motion.p>
 
-          {/* Bouton principal */}
+          {/* Bouton principal avec LEDs */}
           <motion.button
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -70,10 +103,30 @@ export function SimpleCalComRedirect() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleButtonClick}
-            className="bg-gradient-to-r from-blue-600 to-blue-500 text-white px-12 py-6 rounded-2xl font-bold text-xl shadow-2xl shadow-blue-500/50 hover:shadow-blue-500/70 transition-all duration-300 flex items-center gap-3 mx-auto"
+            className="relative text-white px-12 py-6 rounded-2xl font-semibold text-xl transition-all duration-300 flex items-center gap-3 mx-auto overflow-hidden"
+            style={{
+              background: 'radial-gradient(circle 280px at 0% 0%, rgba(68, 68, 68, 0.3), rgba(12, 13, 13, 1))',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.1), 0 4px 12px rgba(0, 0, 0, 0.6)'
+            }}
           >
-            <Calendar className="h-8 w-8" />
-            Booker mes appels de la semaine
+            {/* LED animée */}
+            <motion.div
+              className="absolute -inset-[1px] rounded-2xl"
+              style={{
+                background: 'radial-gradient(circle 230px at 0% 0%, rgba(255, 255, 255, 0.1), rgba(12, 13, 13, 0.9))',
+              }}
+              animate={{
+                opacity: [0.3, 0.5, 0.3],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut'
+              }}
+            />
+            <Calendar className="h-8 w-8 relative z-10" />
+            <span className="relative z-10">Booker mes appels de la semaine</span>
           </motion.button>
         </motion.div>
       </div>
@@ -92,45 +145,83 @@ export function SimpleCalComRedirect() {
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="relative z-10 bg-white rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6"
+            className="relative z-10 rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6 overflow-hidden"
+            style={{
+              background: 'radial-gradient(circle 280px at 0% 0%, rgba(68, 68, 68, 0.3), rgba(12, 13, 13, 1))',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.1), 0 8px 32px rgba(0, 0, 0, 0.8)'
+            }}
           >
+            {/* LED animée autour de la popup */}
+            <motion.div
+              className="absolute -inset-[1px] rounded-2xl"
+              style={{
+                background: 'radial-gradient(circle 230px at 0% 0%, rgba(255, 255, 255, 0.1), rgba(12, 13, 13, 0.9))',
+              }}
+              animate={{
+                opacity: [0.3, 0.5, 0.3],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut'
+              }}
+            />
+            
             {/* Icône d'alerte */}
-            <div className="mx-auto w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-6">
-              <AlertCircle className="h-8 w-8 text-yellow-600" />
+            <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center mb-6 relative z-10"
+              style={{
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)'
+              }}>
+              <AlertCircle className="h-8 w-8 text-white" />
             </div>
 
             {/* Message */}
-            <h2 className="text-2xl font-bold mb-4 text-gray-900 text-center">
+            <h2 className="text-2xl font-extralight leading-tight tracking-tight text-slate-50 mb-4 text-center relative z-10">
               Confirmation importante
             </h2>
             
-            <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
-              <p className="text-gray-700 text-lg leading-relaxed">
-                Si vous appuyez sur <span className="font-bold text-blue-600">continuer</span>, 
-                vous n'aurez plus qu'<span className="font-bold text-blue-600">1 appel</span> disponible pour cette semaine.
+            <div className="rounded-xl p-6 mb-6 relative z-10"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)'
+              }}>
+              <p className="text-white/80 text-lg leading-relaxed">
+                Si vous appuyez sur <span className="font-semibold text-white">continuer</span>, 
+                vous n'aurez plus qu'<span className="font-semibold text-white">1 appel</span> disponible pour cette semaine.
               </p>
-              <p className="text-gray-600 mt-4">
+              <p className="text-white/60 mt-4">
                 Voulez-vous vraiment continuer ?
               </p>
-              <p className="text-blue-600 font-semibold mt-4">
+              <p className="text-white font-semibold mt-4">
                 📅 Vous pourrez booker 2 nouveaux appels à partir de lundi prochain
               </p>
             </div>
 
-            {/* Message important en rouge */}
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
-              <p className="text-red-700 font-bold text-center">
+            {/* Message important */}
+            <div className="rounded-xl p-4 mb-6 relative z-10"
+              style={{
+                background: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.3)'
+              }}>
+              <p className="text-white font-semibold text-center">
                 ⚠️ TRÈS IMPORTANT : Réserver votre appel avec le même email que vous avez utilisé pour votre connexion sur votre app RizeAppHub™
               </p>
             </div>
 
             {/* Boutons */}
-            <div className="flex gap-4 justify-center">
+            <div className="flex gap-4 justify-center relative z-10">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleCancel}
-                className="px-8 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl font-semibold transition-colors"
+                className="px-8 py-3 rounded-xl font-semibold transition-all"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: 'white'
+                }}
               >
                 Annuler
               </motion.button>
@@ -140,21 +231,27 @@ export function SimpleCalComRedirect() {
                 whileTap={{ scale: 0.95 }}
                 onClick={handleConfirm}
                 disabled={isRedirecting}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/50 transition-all flex items-center gap-2"
+                className="px-8 py-3 rounded-xl font-semibold transition-all flex items-center gap-2 relative overflow-hidden"
+                style={{
+                  background: 'radial-gradient(circle 280px at 0% 0%, rgba(68, 68, 68, 0.3), rgba(12, 13, 13, 1))',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: 'white',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.6)'
+                }}
               >
                 {isRedirecting ? (
                   <>
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                      className="w-5 h-5 border-2 border-white border-t-transparent rounded-full relative z-10"
                     />
-                    Redirection...
+                    <span className="relative z-10">Redirection...</span>
                   </>
                 ) : (
                   <>
-                    <Calendar className="h-5 w-5" />
-                    Continuer
+                    <Calendar className="h-5 w-5 relative z-10" />
+                    <span className="relative z-10">Continuer</span>
                   </>
                 )}
               </motion.button>

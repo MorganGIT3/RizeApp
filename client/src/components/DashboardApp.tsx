@@ -533,7 +533,7 @@ export function DashboardApp({ onLogout }: DashboardAppProps) {
           </div>
         );
       default:
-        return <Dashboard />;
+        return <Dashboard onNavigate={setCurrentView} />;
     }
   };
 
