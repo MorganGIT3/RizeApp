@@ -8,9 +8,10 @@ interface GoldCardProps {
   background: ReactNode;
   onClick?: () => void;
   className?: string;
+  hoverContent?: ReactNode;
 }
 
-export const GoldCard = ({ name, Icon, background, onClick, className = "" }: GoldCardProps) => {
+export const GoldCard = ({ name, Icon, background, onClick, className = "", hoverContent }: GoldCardProps) => {
   return (
     <motion.div
       className={`relative group ${className}`}
@@ -108,9 +109,18 @@ export const GoldCard = ({ name, Icon, background, onClick, className = "" }: Go
             </h3>
           </div>
 
+          {/* Contenu animé au hover */}
+          {hoverContent && (
+            <motion.div
+              className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-out"
+            >
+              {hoverContent}
+            </motion.div>
+          )}
+
           {/* Bouton CTA au hover */}
           <motion.div
-            className="flex items-center gap-2 text-white/80 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+            className="flex items-center gap-2 text-white/80 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity relative z-30"
             initial={{ y: 10, opacity: 0 }}
             whileHover={{ y: 0, opacity: 1 }}
           >
