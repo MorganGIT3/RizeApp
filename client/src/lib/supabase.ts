@@ -257,8 +257,12 @@ export const signUpUser = async (email: string, password: string, fullName?: str
     
     // VÉRIFIER QUE L'UTILISATEUR A ÉTÉ CRÉÉ
     if (!signUpResult.data?.user) {
-      const error = new Error('Aucun utilisateur créé. Vérifiez votre configuration Supabase.');
+      const error = new Error('Aucun utilisateur créé. Vérifiez votre configuration Supabase (URL, clé API, paramètres Auth).');
       console.error('❌ ERREUR: Aucun utilisateur créé');
+      console.error('   Vérifiez dans Supabase Dashboard:');
+      console.error('   1. Authentication → Settings → Auth Providers');
+      console.error('   2. Que "Enable email confirmations" est bien configuré');
+      console.error('   3. Que les credentials dans le code sont corrects');
       console.log('═══════════════════════════════════════════════');
       return { 
         data: signUpResult.data, 
@@ -266,8 +270,24 @@ export const signUpUser = async (email: string, password: string, fullName?: str
       };
     }
     
+    // VÉRIFICATION FINALE : S'assurer que le compte est vraiment créé
     console.log('✅ COMPTE CRÉÉ DANS SUPABASE AUTH');
     console.log('   User ID:', signUpResult.data.user.id);
+    console.log('   Email:', signUpResult.data.user.email);
+    console.log('   Créé le:', new Date(signUpResult.data.user.created_at).toLocaleString());
+    
+    // Vérifier que l'utilisateur existe vraiment en essayant de le récupérer
+    try {
+      const { data: verifyUser, error: verifyError } = await supabase.auth.getUser();
+      
+      if (verifyError || !verifyUser.user) {
+        console.warn('⚠️ Impossible de vérifier l\'utilisateur créé:', verifyError?.message);
+      } else {
+        console.log('✅ Vérification: Utilisateur confirmé dans Supabase');
+      }
+    } catch (verifyErr) {
+      console.warn('⚠️ Erreur lors de la vérification:', verifyErr);
+    }
     
     // CRÉER LE PROFIL UTILISATEUR SI SESSION ACTIVE
     if (signUpResult.data.session) {
@@ -285,13 +305,18 @@ export const signUpUser = async (email: string, password: string, fullName?: str
       
       if (profileCreated) {
         console.log('✅ PROFIL UTILISATEUR CRÉÉ');
+      } else {
+        console.warn('⚠️ Profil utilisateur non créé, mais le compte existe dans Supabase Auth');
       }
     } else {
-      console.log('⚠️ Pas de session active (email à confirmer)');
+      console.log('⚠️ Pas de session active (email à confirmer peut-être requis)');
+      console.log('   Le compte est créé dans Supabase Auth');
       console.log('   Le profil sera créé lors de la première connexion');
     }
     
     console.log('✅ INSCRIPTION RÉUSSIE');
+    console.log('   Le compte est maintenant dans Supabase Auth');
+    console.log('   Vérifiez dans Supabase Dashboard → Authentication → Users');
     console.log('═══════════════════════════════════════════════');
     
     // RETOURNER LE SUCCÈS

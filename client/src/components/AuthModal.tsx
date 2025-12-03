@@ -82,22 +82,33 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
       console.log('Réponse inscription:', { data, error });
       
       if (error) {
-        console.error('Erreur inscription:', error);
+        console.error('❌ ERREUR INSCRIPTION:', error);
+        console.error('   Code:', error.code);
+        console.error('   Message:', error.message);
+        console.error('   User créé:', !!data?.user);
         
         // Messages d'erreur plus clairs
         let errorMessage = "Erreur lors de la création du compte";
         const errorMsg = error.message?.toLowerCase() || '';
+        const errorCode = error.code || '';
+        
+        // Vérifier d'abord si le compte a vraiment été créé
+        const accountCreated = !!data?.user;
         
         if (errorMsg.includes('already registered') || errorMsg.includes('already exists') || errorMsg.includes('user already registered')) {
-          errorMessage = "Cet email est déjà utilisé";
-        } else if (errorMsg.includes('invalid email') || errorMsg.includes('email')) {
-          errorMessage = "Adresse email invalide";
-        } else if (errorMsg.includes('password') || errorMsg.includes('weak')) {
-          errorMessage = "Mot de passe trop faible";
-        } else if (errorMsg.includes('database') || errorMsg.includes('saving') || errorMsg.includes('profile')) {
-          errorMessage = "Erreur lors de la sauvegarde du profil. Votre compte a été créé, veuillez vous connecter.";
+          errorMessage = "Cet email est déjà utilisé. Connectez-vous ou utilisez un autre email.";
+        } else if (errorMsg.includes('invalid email') || errorCode.includes('invalid_email')) {
+          errorMessage = "Adresse email invalide. Vérifiez votre email.";
+        } else if (errorMsg.includes('password') || errorMsg.includes('weak') || errorCode.includes('password')) {
+          errorMessage = "Mot de passe trop faible. Utilisez au moins 6 caractères.";
+        } else if (errorMsg.includes('rate limit') || errorCode.includes('rate_limit')) {
+          errorMessage = "Trop de tentatives. Veuillez attendre quelques minutes.";
+        } else if (accountCreated) {
+          // SEULEMENT si on est sûr que le compte est créé
+          errorMessage = "Compte créé mais erreur lors de la sauvegarde du profil. Essayez de vous connecter.";
         } else {
-          errorMessage = error.message || "Une erreur est survenue lors de la création du compte";
+          // Si le compte n'est pas créé, afficher l'erreur exacte
+          errorMessage = error.message || "Une erreur est survenue lors de la création du compte. Vérifiez la console pour plus de détails.";
         }
         
         setError(errorMessage);
