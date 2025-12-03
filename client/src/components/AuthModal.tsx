@@ -76,34 +76,72 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
     setError("");
 
     try {
+      console.log('═══════════════════════════════════════════════');
+      console.log('📝 DÉBUT DU TEST D\'INSCRIPTION');
+      console.log('Email:', signupData.email);
+      console.log('Nom:', signupData.name);
+      console.log('═══════════════════════════════════════════════');
+      
       const { data, error } = await signUpUser(signupData.email, signupData.password, signupData.name);
       
+      console.log('📥 RÉPONSE DE signUpUser:');
+      console.log('   - Data:', data);
+      console.log('   - Error:', error);
+      console.log('   - User créé:', !!data?.user);
+      console.log('   - Session:', !!data?.session);
+      
       if (error) {
+        console.error('❌ ERREUR DÉTECTÉE:');
+        console.error('   Code:', error.code);
+        console.error('   Message:', error.message);
+        console.error('   Status:', error.status);
+        console.error('   Erreur complète:', JSON.stringify(error, null, 2));
+        
         // Messages d'erreur simples comme dans handleLogin
         let errorMessage = "Erreur lors de la création du compte";
         const errorMsg = error.message?.toLowerCase() || '';
+        const errorCode = error.code || '';
         
-        if (errorMsg.includes('already registered') || errorMsg.includes('already exists')) {
+        if (errorMsg.includes('already registered') || errorMsg.includes('already exists') || errorCode.includes('already_registered')) {
           errorMessage = "Cet email est déjà utilisé";
-        } else if (errorMsg.includes('invalid email')) {
+        } else if (errorMsg.includes('invalid email') || errorCode.includes('invalid_email')) {
           errorMessage = "Adresse email invalide";
-        } else if (errorMsg.includes('password')) {
+        } else if (errorMsg.includes('password') || errorCode.includes('password')) {
           errorMessage = "Mot de passe trop faible";
+        } else if (errorMsg.includes('database') || errorMsg.includes('saving') || errorMsg.includes('new user')) {
+          // Si le compte est créé mais erreur de profil
+          if (data?.user) {
+            errorMessage = "Compte créé ! Vous pouvez vous connecter. (Erreur mineure de profil)";
+          } else {
+            errorMessage = error.message || "Erreur lors de la création du compte";
+          }
         } else {
           errorMessage = error.message || "Une erreur est survenue lors de la création du compte";
         }
         
+        console.log('   Message affiché à l\'utilisateur:', errorMessage);
         setError(errorMessage);
         return;
       }
 
       if (data?.user) {
-        console.log('Inscription réussie:', data.user);
+        console.log('✅ INSCRIPTION RÉUSSIE');
+        console.log('   User ID:', data.user.id);
+        console.log('   Email:', data.user.email);
+        console.log('   Session:', !!data.session);
+        console.log('═══════════════════════════════════════════════');
+        
         onAuthSuccess?.();
         onOpenChange(false);
+      } else {
+        console.error('❌ AUCUN UTILISATEUR CRÉÉ');
+        console.log('   Data reçue:', data);
+        setError("Erreur : aucun utilisateur créé. Vérifiez la console pour plus de détails.");
       }
-    } catch (error) {
-      console.error('Erreur d\'inscription:', error);
+    } catch (error: any) {
+      console.error('❌ EXCEPTION CAPTURÉE:', error);
+      console.error('   Message:', error.message);
+      console.error('   Stack:', error.stack);
       setError("Une erreur est survenue lors de la création du compte");
     } finally {
       setIsLoading(false);

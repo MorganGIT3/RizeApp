@@ -165,6 +165,10 @@ export const logoutAdmin = () => {
 // Fonction utilitaire pour créer ou mettre à jour le profil utilisateur
 export const ensureUserProfile = async (userId: string, email: string, fullName?: string): Promise<boolean> => {
   try {
+    console.log('🔍 Vérification du profil utilisateur...');
+    console.log('   User ID:', userId);
+    console.log('   Email:', email);
+    
     // Vérifier si le profil existe
     const { data: existingProfile, error: checkError } = await supabase
       .from('user_profiles')
@@ -172,30 +176,52 @@ export const ensureUserProfile = async (userId: string, email: string, fullName?
       .eq('user_id', userId)
       .maybeSingle()
 
+    if (checkError) {
+      console.error('❌ Erreur lors de la vérification du profil:', checkError);
+      console.error('   Code:', checkError.code);
+      console.error('   Message:', checkError.message);
+    }
+
     // Si le profil n'existe pas, le créer
     if (!existingProfile) {
-      const { error: insertError } = await supabase
+      console.log('📝 Création du profil utilisateur...');
+      const profileData = {
+        user_id: userId,
+        email: email,
+        full_name: fullName || email.split('@')[0] || 'Utilisateur',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      
+      console.log('   Données du profil:', profileData);
+      
+      const { data: insertedProfile, error: insertError } = await supabase
         .from('user_profiles')
-        .insert({
-          user_id: userId,
-          email: email,
-          full_name: fullName || email.split('@')[0] || 'Utilisateur',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
+        .insert(profileData)
+        .select()
 
       if (insertError) {
-        console.error('⚠️ Erreur lors de la création du profil:', insertError);
+        console.error('❌ ERREUR LORS DE LA CRÉATION DU PROFIL:');
+        console.error('   Code:', insertError.code);
+        console.error('   Message:', insertError.message);
+        console.error('   Details:', insertError.details);
+        console.error('   Hint:', insertError.hint);
+        console.error('   Erreur complète:', insertError);
         return false;
       }
       
-      console.log('✅ Profil utilisateur créé');
+      console.log('✅ Profil utilisateur créé avec succès');
+      console.log('   Profil ID:', insertedProfile?.[0]?.id);
+      return true;
+    } else {
+      console.log('✅ Profil utilisateur existe déjà');
       return true;
     }
     
-    return true;
   } catch (error: any) {
-    console.error('⚠️ Erreur lors de la vérification/création du profil:', error);
+    console.error('❌ EXCEPTION lors de la vérification/création du profil:');
+    console.error('   Message:', error.message);
+    console.error('   Stack:', error.stack);
     return false;
   }
 }
@@ -203,11 +229,18 @@ export const ensureUserProfile = async (userId: string, email: string, fullName?
 // Fonction pour créer un utilisateur - SIMPLE COMME signInUser
 export const signUpUser = async (email: string, password: string, fullName?: string) => {
   try {
-    console.log('🔵 Tentative d\'inscription pour:', email);
+    console.log('═══════════════════════════════════════════════');
+    console.log('🔵 INSCRIPTION - DÉBUT');
+    console.log('📧 Email:', email);
+    console.log('👤 Nom:', fullName || 'Non fourni');
+    console.log('═══════════════════════════════════════════════');
+    
+    const cleanEmail = email.trim().toLowerCase();
     
     // Créer le compte dans Supabase Auth (exactement comme signInUser mais avec signUp)
+    console.log('📤 Appel à supabase.auth.signUp()...');
     const { data, error } = await supabase.auth.signUp({
-      email: email.trim().toLowerCase(),
+      email: cleanEmail,
       password: password,
       options: {
         data: {
@@ -217,27 +250,59 @@ export const signUpUser = async (email: string, password: string, fullName?: str
       }
     })
     
+    console.log('📥 Réponse reçue de Supabase Auth');
+    console.log('   - User créé:', !!data?.user);
+    console.log('   - Session créée:', !!data?.session);
+    console.log('   - User ID:', data?.user?.id || 'N/A');
+    console.log('   - Email:', data?.user?.email || 'N/A');
+    
     if (error) {
-      console.error('❌ Erreur d\'inscription:', error);
+      console.error('❌ ERREUR SUPABASE AUTH:');
+      console.error('   Code:', error.code || 'N/A');
+      console.error('   Message:', error.message || 'N/A');
+      console.error('   Status:', error.status || 'N/A');
+      console.error('   Erreur complète:', error);
+      console.log('═══════════════════════════════════════════════');
       return { data, error }
     }
     
     // Si l'inscription réussit, s'assurer que le profil utilisateur existe (comme dans signInUser)
-    if (data.user && data.session) {
-      console.log('✅ Inscription réussie, vérification du profil utilisateur...');
+    if (data.user) {
+      console.log('✅ Compte créé dans Supabase Auth');
+      console.log('   User ID:', data.user.id);
+      console.log('   Email:', data.user.email);
       
-      // Créer le profil si nécessaire (exactement comme dans signInUser)
-      await ensureUserProfile(
-        data.user.id,
-        data.user.email || email,
-        fullName?.trim() || data.user.user_metadata?.full_name
-      );
+      if (data.session) {
+        console.log('✅ Session active - Création du profil...');
+        
+        // Créer le profil si nécessaire (exactement comme dans signInUser)
+        try {
+          await ensureUserProfile(
+            data.user.id,
+            data.user.email || cleanEmail,
+            fullName?.trim() || data.user.user_metadata?.full_name
+          );
+          console.log('✅ Profil vérifié/créé');
+        } catch (profileError: any) {
+          console.error('❌ Erreur lors de la création du profil:', profileError);
+          // Ne pas bloquer l'inscription si le profil ne peut pas être créé
+          // Le compte est quand même créé dans Supabase Auth
+        }
+      } else {
+        console.log('⚠️ Pas de session active (email à confirmer peut-être)');
+        console.log('   Le compte est créé dans Supabase Auth');
+        console.log('   Vous pourrez vous connecter après confirmation');
+      }
     }
     
+    console.log('═══════════════════════════════════════════════');
     return { data, error }
-  } catch (error) {
-    console.error('❌ Exception lors de l\'inscription:', error)
-    return { data: null, error }
+  } catch (error: any) {
+    console.error('❌ EXCEPTION LORS DE L\'INSCRIPTION:', error);
+    console.error('   Message:', error.message);
+    console.error('   Stack:', error.stack);
+    console.log('═══════════════════════════════════════════════');
+    return { data: null, error: error || new Error('Erreur inattendue') }
   }
 }
 
