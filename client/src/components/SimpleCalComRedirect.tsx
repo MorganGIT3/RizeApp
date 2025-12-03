@@ -15,7 +15,7 @@ export function SimpleCalComRedirect() {
   const handleConfirm = () => {
     setIsRedirecting(true)
     // Rediriger vers cal.com
-    window.location.href = 'https://cal.com/smartappacademy/1h-d-accompagnement'
+    window.location.href = 'https://cal.com/smartappacademy/rizecall'
   }
 
   const handleCancel = () => {
