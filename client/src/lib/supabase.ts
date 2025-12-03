@@ -171,6 +171,40 @@ export const signUpUser = async (email: string, password: string, fullName?: str
       return { data, error }
     }
     
+    // Si l'utilisateur est créé, créer le profil utilisateur manuellement si nécessaire
+    if (data.user) {
+      try {
+        // Vérifier si le profil existe déjà
+        const { data: existingProfile, error: checkError } = await supabase
+          .from('user_profiles')
+          .select('id')
+          .eq('user_id', data.user.id)
+          .single()
+
+        // Si le profil n'existe pas, le créer manuellement
+        if (!existingProfile && checkError?.code === 'PGRST116') {
+          const { error: insertError } = await supabase
+            .from('user_profiles')
+            .insert({
+              user_id: data.user.id,
+              email: data.user.email || email,
+              full_name: fullName || data.user.user_metadata?.full_name || email.split('@')[0] || 'Utilisateur',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            })
+
+          if (insertError) {
+            console.error('Erreur lors de la création du profil utilisateur:', insertError)
+            // Ne pas bloquer l'inscription si le profil ne peut pas être créé
+            // Le trigger SQL devrait le créer automatiquement
+          }
+        }
+      } catch (profileError) {
+        console.error('Erreur lors de la vérification/création du profil:', profileError)
+        // Ne pas bloquer l'inscription
+      }
+    }
+    
     // Si l'utilisateur est créé, se connecter automatiquement si l'email n'a pas besoin de confirmation
     if (data.user && data.session) {
       return { data, error: null }

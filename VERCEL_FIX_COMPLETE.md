@@ -71,3 +71,4 @@ Après le déploiement :
 3. Vérifier la console du navigateur pour les erreurs
 4. Si problème persiste, consulter les logs Vercel pour plus de détails
 
+

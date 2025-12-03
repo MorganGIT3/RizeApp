@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LandingPageNew from './LandingPageNew';
 import { AuthModal } from './AuthModal';
 import { OTPVerification } from './OTPVerification';
 import AnimatedBackground from './AnimatedBackground';
 import { Zap } from 'lucide-react';
 import { useClickSound } from '@/hooks/useClickSound';
+import { supabase } from '@/lib/supabase';
 
 interface LandingPageProps {
   onLogin?: () => void;
@@ -13,12 +14,47 @@ interface LandingPageProps {
 export function LandingPage({ onLogin }: LandingPageProps) {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [otpModalOpen, setOtpModalOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const playClick = useClickSound(0.3);
+
+  useEffect(() => {
+    checkAuth();
+    
+    // Écouter les changements de session
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setIsAuthenticated(!!session);
+      setIsCheckingAuth(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  const checkAuth = async () => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      setIsAuthenticated(!!session);
+    } catch (error) {
+      console.error('Erreur lors de la vérification de la session:', error);
+      setIsAuthenticated(false);
+    } finally {
+      setIsCheckingAuth(false);
+    }
+  };
 
   const handleAuthSuccess = () => {
     // Fermer immédiatement le modal
     setAuthModalOpen(false);
+    // Vérifier à nouveau la session
+    checkAuth();
     // Appeler directement onLogin pour aller à l'onboarding
+    onLogin?.();
+  };
+
+  const handleGoClick = () => {
+    playClick();
     onLogin?.();
   };
 
@@ -51,10 +87,14 @@ export function LandingPage({ onLogin }: LandingPageProps) {
 
       {/* New Landing Page Content */}
       <div className="relative z-20">
-        <LandingPageNew 
-          onLogin={() => setAuthModalOpen(true)}
-          onSignup={() => setAuthModalOpen(true)}
-        />
+        {!isCheckingAuth && (
+          <LandingPageNew 
+            isAuthenticated={isAuthenticated}
+            onLogin={() => setAuthModalOpen(true)}
+            onSignup={() => setAuthModalOpen(true)}
+            onGo={handleGoClick}
+          />
+        )}
       </div>
 
       {/* Modals */}

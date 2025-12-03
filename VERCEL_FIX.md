@@ -70,3 +70,4 @@ Après déploiement, vérifiez :
 - La configuration `rewrites` permet le routing client-side (React Router)
 - L'ErrorBoundary affiche un message d'erreur lisible au lieu d'un écran blanc
 
+

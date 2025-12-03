@@ -32,13 +32,15 @@ export const AuroraBackground = ({
 };
 
 interface LandingPageNewProps {
+  isAuthenticated?: boolean;
   onLogin?: () => void;
   onSignup?: () => void;
+  onGo?: () => void;
 }
 
-export default function LandingPageNew({ onLogin, onSignup }: LandingPageNewProps) {
+export default function LandingPageNew({ isAuthenticated = false, onLogin, onSignup, onGo }: LandingPageNewProps) {
   
-  const title = "Connecte toi à RizeAppHub™";
+  const title = isAuthenticated ? "Bienvenue sur RizeAppHub™" : "Connecte toi à RizeAppHub™";
   const words = title.split(" ");
 
   return (
@@ -112,41 +114,66 @@ export default function LandingPageNew({ onLogin, onSignup }: LandingPageNewProp
                 transition={{ duration: 0.8, delay: 1.8 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center"
               >
-                <div className="inline-block group relative bg-gradient-to-b from-black/10 to-white/10 dark:from-white/10 dark:to-black/10 p-px rounded-2xl backdrop-blur-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <button
-                    onClick={() => { onSignup?.(); }}
-                    className="rounded-[1.15rem] px-8 py-6 text-lg font-semibold backdrop-blur-md 
-                      bg-white/95 hover:bg-white/100 dark:bg-black/95 dark:hover:bg-black/100 
-                      text-black dark:text-white transition-all duration-300 
-                      group-hover:-translate-y-0.5 border border-black/10 dark:border-white/10
-                      hover:shadow-md dark:hover:shadow-neutral-800/50"
-                  >
-                    <span className="opacity-90 group-hover:opacity-100 transition-opacity">
-                      Je m'inscris
-                    </span>
-                    <span className="ml-3 opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-300">
-                      →
-                    </span>
-                  </button>
-                </div>
+                {isAuthenticated ? (
+                  // Bouton GO si l'utilisateur est déjà connecté
+                  <div className="inline-block group relative bg-gradient-to-b from-black/10 to-white/10 dark:from-white/10 dark:to-black/10 p-px rounded-2xl backdrop-blur-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                    <button
+                      onClick={() => { onGo?.(); }}
+                      className="rounded-[1.15rem] px-12 py-6 text-xl font-bold backdrop-blur-md 
+                        bg-gradient-to-r from-white/95 to-gray-100/95 hover:from-white hover:to-gray-100 
+                        dark:from-black/95 dark:to-gray-900/95 dark:hover:from-black dark:hover:to-gray-900
+                        text-black dark:text-white transition-all duration-300 
+                        group-hover:-translate-y-1 border border-black/10 dark:border-white/10
+                        hover:shadow-lg dark:hover:shadow-neutral-800/50"
+                    >
+                      <span className="opacity-90 group-hover:opacity-100 transition-opacity">
+                        GO
+                      </span>
+                      <span className="ml-3 opacity-70 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300 text-2xl">
+                        →
+                      </span>
+                    </button>
+                  </div>
+                ) : (
+                  // Boutons de connexion/inscription si l'utilisateur n'est pas connecté
+                  <>
+                    <div className="inline-block group relative bg-gradient-to-b from-black/10 to-white/10 dark:from-white/10 dark:to-black/10 p-px rounded-2xl backdrop-blur-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                      <button
+                        onClick={() => { onSignup?.(); }}
+                        className="rounded-[1.15rem] px-8 py-6 text-lg font-semibold backdrop-blur-md 
+                          bg-white/95 hover:bg-white/100 dark:bg-black/95 dark:hover:bg-black/100 
+                          text-black dark:text-white transition-all duration-300 
+                          group-hover:-translate-y-0.5 border border-black/10 dark:border-white/10
+                          hover:shadow-md dark:hover:shadow-neutral-800/50"
+                      >
+                        <span className="opacity-90 group-hover:opacity-100 transition-opacity">
+                          Je m'inscris
+                        </span>
+                        <span className="ml-3 opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-300">
+                          →
+                        </span>
+                      </button>
+                    </div>
 
-                <div className="inline-block group relative bg-gradient-to-b from-black/10 to-white/10 dark:from-white/10 dark:to-black/10 p-px rounded-2xl backdrop-blur-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <button
-                    onClick={() => { onLogin?.(); }}
-                    className="rounded-[1.15rem] px-8 py-6 text-lg font-semibold backdrop-blur-md 
-                      bg-transparent hover:bg-white/50 dark:hover:bg-black/50 
-                      text-black dark:text-white transition-all duration-300 
-                      group-hover:-translate-y-0.5 border border-black/10 dark:border-white/10
-                      hover:shadow-md dark:hover:shadow-neutral-800/50"
-                  >
-                    <span className="opacity-90 group-hover:opacity-100 transition-opacity">
-                      Connection
-                    </span>
-                    <span className="ml-3 opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-300">
-                      →
-                    </span>
-                  </button>
-                </div>
+                    <div className="inline-block group relative bg-gradient-to-b from-black/10 to-white/10 dark:from-white/10 dark:to-black/10 p-px rounded-2xl backdrop-blur-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+                      <button
+                        onClick={() => { onLogin?.(); }}
+                        className="rounded-[1.15rem] px-8 py-6 text-lg font-semibold backdrop-blur-md 
+                          bg-transparent hover:bg-white/50 dark:hover:bg-black/50 
+                          text-black dark:text-white transition-all duration-300 
+                          group-hover:-translate-y-0.5 border border-black/10 dark:border-white/10
+                          hover:shadow-md dark:hover:shadow-neutral-800/50"
+                      >
+                        <span className="opacity-90 group-hover:opacity-100 transition-opacity">
+                          Connection
+                        </span>
+                        <span className="ml-3 opacity-70 group-hover:opacity-100 group-hover:translate-x-1.5 transition-all duration-300">
+                          →
+                        </span>
+                      </button>
+                    </div>
+                  </>
+                )}
               </motion.div>
             </motion.div>
           </div>
