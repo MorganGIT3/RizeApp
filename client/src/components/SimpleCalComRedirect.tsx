@@ -9,13 +9,14 @@ export function SimpleCalComRedirect() {
 
 
   const handleButtonClick = () => {
-    setShowConfirmation(true)
+    // Rediriger directement vers cal.com
+    window.open('https://cal.com/smartappacademy/rizecall', '_blank', 'noopener,noreferrer')
   }
 
   const handleConfirm = () => {
     setIsRedirecting(true)
     // Rediriger vers cal.com
-    window.location.href = 'https://cal.com/smartappacademy/rizecall'
+    window.open('https://cal.com/smartappacademy/rizecall', '_blank', 'noopener,noreferrer')
   }
 
   const handleCancel = () => {
