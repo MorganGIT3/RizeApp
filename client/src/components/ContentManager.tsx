@@ -12,7 +12,6 @@ import {
   Plus,
   Play,
   Camera,
-  Music,
   Users,
   Briefcase,
   Palette,
@@ -69,7 +68,6 @@ export function ContentManager() {
     { id: '13', name: 'Posts Feed', type: 'folder', createdAt: new Date('2024-01-18'), parentId: '1' },
     { id: '111', name: 'Miniatures', type: 'folder', createdAt: new Date('2024-01-23'), parentId: '11' },
     { id: '112', name: 'Scripts', type: 'folder', createdAt: new Date('2024-01-24'), parentId: '11' },
-    { id: '113', name: 'Musiques', type: 'folder', createdAt: new Date('2024-01-25'), parentId: '11' },
     
     // Sous-dossiers YouTube
     { id: '21', name: 'Vidéos Longues', type: 'folder', createdAt: new Date('2024-01-21'), parentId: '2' },
@@ -168,7 +166,7 @@ export function ContentManager() {
       case 'instagram':
         return <Camera className="w-12 h-12 text-pink-500 mx-auto mb-2" />;
       case 'tiktok':
-        return <Music className="w-12 h-12 text-white mx-auto mb-2" />;
+        return <Video className="w-12 h-12 text-white mx-auto mb-2" />;
       case 'facebook':
         return <Users className="w-12 h-12 text-blue-600 mx-auto mb-2" />;
       case 'linkedin':

@@ -7,7 +7,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import { signUpUser, signInUser, resetPassword } from "@/lib/supabase";
-import { usePremiumSound } from "@/hooks/usePremiumSound";
 
 interface AuthModalProps {
   open: boolean;
@@ -29,11 +28,9 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
     name: "" 
   });
   const [resetEmail, setResetEmail] = useState("");
-  const { playPremiumSound } = usePremiumSound();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    playPremiumSound();
     setIsLoading(true);
     setError("");
 

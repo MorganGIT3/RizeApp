@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { User, LogOut } from 'lucide-react';
 import { getUserProfile, UserProfile, getCurrentUser } from '@/lib/supabase';
 import { motion, AnimatePresence } from 'framer-motion';
-import { usePremiumSound } from '@/hooks/usePremiumSound';
 import { SimpleCalComRedirect } from './SimpleCalComRedirect';
 import { IOSDock } from './IOSDock';
 import { GoldCard } from './DashboardGoldCard';
@@ -865,7 +864,6 @@ const ExampleAppCard = ({ title, url, description, previewImage, index = 0 }: Ex
 export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState('/dashboard');
-  const { playPremiumSound } = usePremiumSound();
 
   // Désactiver le scroll
   useEffect(() => {
@@ -925,7 +923,6 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
 
   // Handlers pour la barre iOS
   const handleHomeClick = () => {
-    playPremiumSound();
     setCurrentView('/dashboard');
   };
 
