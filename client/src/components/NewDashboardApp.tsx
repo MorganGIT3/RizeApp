@@ -687,10 +687,15 @@ interface ExampleAppCardProps {
   description: string;
   previewImage?: string;
   index?: number;
-  githubUrl: string;
+  githubUrl?: string;
+  showHoverButtons?: boolean;
 }
 
-const ExampleAppCard = ({ title, url, description, previewImage, index = 0, githubUrl }: ExampleAppCardProps) => {
+const ExampleAppCard = ({ title, url, description, previewImage, index = 0, githubUrl, showHoverButtons = true }: ExampleAppCardProps) => {
+  const handleClick = () => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   const handleViewApp = (e: React.MouseEvent) => {
     e.stopPropagation();
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -698,7 +703,9 @@ const ExampleAppCard = ({ title, url, description, previewImage, index = 0, gith
 
   const handleDownloadCode = (e: React.MouseEvent) => {
     e.stopPropagation();
-    window.open(githubUrl, '_blank', 'noopener,noreferrer');
+    if (githubUrl) {
+      window.open(githubUrl, '_blank', 'noopener,noreferrer');
+    }
   };
 
   const [shouldLoadIframe, setShouldLoadIframe] = useState(false);
@@ -748,6 +755,7 @@ const ExampleAppCard = ({ title, url, description, previewImage, index = 0, gith
         delay: index * 0.1,
         ease: [0.25, 0.46, 0.45, 0.94]
       }}
+      onClick={showHoverButtons ? undefined : handleClick}
     >
       {/* Bordure LED animée */}
       <div className="absolute -inset-[1px] rounded-lg overflow-hidden">
@@ -856,25 +864,34 @@ const ExampleAppCard = ({ title, url, description, previewImage, index = 0, gith
         {/* Overlay pour indiquer que c'est cliquable */}
         <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors z-10" />
 
-        {/* Footer avec boutons */}
-        <div className="absolute bottom-16 left-0 right-0 z-20 p-4 bg-gradient-to-t from-black/80 to-transparent">
-          <div className="flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <button
-              onClick={handleViewApp}
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg text-sm font-medium text-white border border-white/20 hover:border-white/30 transition-all duration-200"
-            >
-              <ExternalLink className="w-4 h-4" />
-              <span>Voir l'application</span>
-            </button>
-            <button
-              onClick={handleDownloadCode}
-              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg text-sm font-medium text-white border border-white/20 hover:border-white/30 transition-all duration-200"
-            >
-              <Github className="w-4 h-4" />
-              <span>Télécharger le code complet</span>
-            </button>
+        {/* Footer */}
+        {showHoverButtons && githubUrl ? (
+          <div className="absolute bottom-16 left-0 right-0 z-20 p-4 bg-gradient-to-t from-black/80 to-transparent">
+            <div className="flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <button
+                onClick={handleViewApp}
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg text-sm font-medium text-white border border-white/20 hover:border-white/30 transition-all duration-200"
+              >
+                <ExternalLink className="w-4 h-4" />
+                <span>Voir l'application</span>
+              </button>
+              <button
+                onClick={handleDownloadCode}
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg text-sm font-medium text-white border border-white/20 hover:border-white/30 transition-all duration-200"
+              >
+                <Github className="w-4 h-4" />
+                <span>Télécharger le code complet</span>
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="absolute bottom-0 left-0 right-0 z-20 p-4 bg-gradient-to-t from-black/80 to-transparent">
+            <div className="flex items-center justify-center gap-2 text-xs text-white/60 group-hover:text-white transition-colors">
+              <ExternalLink className="w-4 h-4" />
+              <span>Cliquez pour ouvrir dans un nouvel onglet</span>
+            </div>
+          </div>
+        )}
       </div>
     </motion.div>
   );
@@ -1080,6 +1097,7 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
                     url="https://21st.dev/community/components"
                     description="Bibliothèque de composants UI modernes"
                     index={0}
+                    showHoverButtons={false}
                   />
                   
                   {/* Carte Uiverse */}
@@ -1088,6 +1106,7 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
                     url="https://uiverse.io/elements"
                     description="Éléments UI et composants open source"
                     index={1}
+                    showHoverButtons={false}
                   />
                 </div>
               </div>
