@@ -10,6 +10,7 @@ import { NewDashboardApp } from "@/components/NewDashboardApp";
 import { OnboardingPage } from "@/components/OnboardingPage";
 import { AdminDashboard } from "@/components/AdminDashboard";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { ResetPasswordPage } from "@/components/ResetPasswordPage";
 import { signOutUser } from "@/lib/supabase";
 import { ErrorBoundary } from "./ErrorBoundary";
 
@@ -63,6 +64,7 @@ function App() {
               />
               <Route path="/integrations" element={<Integrations />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
             </Routes>
             <Toaster />
           </ThemeProvider>

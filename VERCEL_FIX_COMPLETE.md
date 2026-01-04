@@ -72,3 +72,4 @@ Après le déploiement :
 4. Si problème persiste, consulter les logs Vercel pour plus de détails
 
 
+

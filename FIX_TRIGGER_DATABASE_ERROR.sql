@@ -52,3 +52,4 @@ CREATE POLICY "Allow insert for trigger and authenticated" ON public.user_profil
 -- Il ne fera plus échouer l'inscription même en cas d'erreur
 -- =====================================================
 
+

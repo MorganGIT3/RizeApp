@@ -157,3 +157,4 @@ Si le problème persiste après avoir suivi ce guide :
 3. Notez les messages d'erreur exacts
 4. Vérifiez la configuration Supabase (URL, clé API)
 
+

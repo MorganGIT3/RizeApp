@@ -70,7 +70,7 @@ export function LandingPage({ onLogin }: LandingPageProps) {
           <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white shadow-lg shadow-gray-500/30">
             <Zap className="h-4 w-4 text-black" />
           </div>
-          <span className="font-bold text-xl text-white">RizeAppHub™</span>
+          <span className="font-bold text-xl text-white">RizeApps™</span>
         </div>
       </div>
 

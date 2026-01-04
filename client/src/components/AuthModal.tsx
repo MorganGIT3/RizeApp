@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Eye, EyeOff } from "lucide-react";
 import { signUpUser, signInUser, resetPassword } from "@/lib/supabase";
+import { useAuthSound } from "@/hooks/useAuthSound";
 
 interface AuthModalProps {
   open: boolean;
@@ -15,6 +16,7 @@ interface AuthModalProps {
 }
 
 export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps) {
+  const { playAuthSound } = useAuthSound();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -68,7 +70,7 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
       return;
     }
 
-    playPremiumSound();
+    playAuthSound();
     setIsLoading(true);
     setError("");
 
@@ -183,8 +185,8 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md p-0 border-0 overflow-hidden rounded-3xl z-[200]">
-        <div className="relative w-full overflow-hidden rounded-3xl">
+      <DialogContent className="sm:max-w-md p-0 border-0 overflow-hidden rounded-[3rem] sm:rounded-[3rem] bg-transparent shadow-none z-[200]">
+        <div className="relative w-full overflow-hidden rounded-[3rem]">
           {/* Magnificent Blue Background with Animation */}
           <div className="absolute inset-0 z-0">
             <img
@@ -201,7 +203,7 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
           <div className="relative z-10 p-8 py-14">
             <DialogHeader className="pb-6">
               <DialogTitle className="text-2xl font-bold text-center text-white">
-                Bienvenu dans <span className="text-white">RizeAppHub™</span>
+                Bienvenu dans <span className="text-white">RizeApps™</span>
               </DialogTitle>
             </DialogHeader>
             
@@ -390,8 +392,8 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
 
       {/* Modal de réinitialisation de mot de passe */}
       <Dialog open={showForgotPassword} onOpenChange={setShowForgotPassword}>
-        <DialogContent className="sm:max-w-md p-0 border-0 overflow-hidden rounded-3xl z-[300]">
-          <div className="relative w-full overflow-hidden rounded-3xl">
+        <DialogContent className="sm:max-w-md p-0 border-0 overflow-hidden rounded-[3rem] sm:rounded-[3rem] bg-transparent shadow-none z-[300]">
+          <div className="relative w-full overflow-hidden rounded-[3rem]">
             {/* Background */}
             <div className="absolute inset-0 z-0">
               <img

@@ -58,7 +58,7 @@ export function OnboardingModal({ open, onOpenChange }: OnboardingModalProps) {
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">
-            Bienvenue sur RizeAppHub™ !
+            Bienvenue sur RizeApps™ !
           </DialogTitle>
         </DialogHeader>
         

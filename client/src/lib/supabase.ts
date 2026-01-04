@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 
-// Configuration Supabase - RizeAppHub™
+// Configuration Supabase - RizeApps™
 const supabaseUrl = 'https://dewpygnammmyvhporthh.supabase.co'
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRld3B5Z25hbW1teXZocG9ydGhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY5MjA4NjksImV4cCI6MjA3MjQ5Njg2OX0.JQ0ugaiP3CMI0O2otvaacq1UG8Bil0J0Djbegbb22Gg'
 
@@ -24,9 +24,9 @@ const ADMIN_CODES = {
     permissions: ['read', 'write', 'delete']
   },
   'smartapp2024': { 
-    name: 'RizeAppHub 2024', 
+    name: 'RizeApps 2024', 
     level: 'admin', 
-    description: 'Accès RizeAppHub™ 2024',
+    description: 'Accès RizeApps™ 2024',
     permissions: ['read', 'write']
   },
   'academy2024': { 

@@ -71,3 +71,4 @@ Après déploiement, vérifiez :
 - L'ErrorBoundary affiche un message d'erreur lisible au lieu d'un écran blanc
 
 
+

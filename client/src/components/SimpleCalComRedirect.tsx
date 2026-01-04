@@ -207,7 +207,7 @@ export function SimpleCalComRedirect() {
                 border: '1px solid rgba(239, 68, 68, 0.3)'
               }}>
               <p className="text-white font-semibold text-center">
-                ⚠️ TRÈS IMPORTANT : Réserver votre appel avec le même email que vous avez utilisé pour votre connexion sur votre app RizeAppHub™
+                ⚠️ TRÈS IMPORTANT : Réserver votre appel avec le même email que vous avez utilisé pour votre connexion sur votre app RizeApps™
               </p>
             </div>
 

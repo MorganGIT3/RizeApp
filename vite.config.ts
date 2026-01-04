@@ -31,13 +31,13 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000
   },
   server: {
-    port: 3000,
+    port: 5000,
     host: true,
     strictPort: true
   },
   base: '/',
   preview: {
-    port: 3000,
+    port: 5000,
     host: true,
     strictPort: true
   }

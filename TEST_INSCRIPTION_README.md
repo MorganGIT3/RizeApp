@@ -112,3 +112,4 @@ Si le test échoue :
 3. Notez les messages d'erreur exacts
 4. Vérifiez la configuration Supabase
 
+

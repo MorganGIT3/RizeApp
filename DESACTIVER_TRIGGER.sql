@@ -21,3 +21,4 @@ CREATE POLICY "Allow insert for all" ON public.user_profiles
 -- Le trigger est désactivé, le profil sera créé manuellement dans le code
 -- =====================================================
 
+

@@ -192,7 +192,7 @@ export function FullScreenCalendar({ data: propData }: FullScreenCalendarProps) 
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4 md:p-8">
       <div className="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
-          🎉 Calendrier RizeAppHub™
+          🎉 Calendrier RizeApps™
         </h1>
         
         <div className="text-center space-y-6">

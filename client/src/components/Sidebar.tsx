@@ -93,7 +93,7 @@ export function AppSidebar({ onNavigate }: AppSidebarProps) {
           <div className="flex items-center justify-center w-8 h-8 rounded-md bg-gradient-to-t from-white to-gray-100">
             <Zap className="h-4 w-4 text-white" />
           </div>
-          <span className="font-bold text-lg text-white">RizeAppHub™</span>
+          <span className="font-bold text-lg text-white">RizeApps™</span>
         </div>
       </SidebarHeader>
       

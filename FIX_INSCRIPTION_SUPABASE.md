@@ -76,3 +76,4 @@ Si l'erreur persiste après avoir désactivé le trigger :
 2. Vérifiez dans Supabase Dashboard si le compte est créé malgré l'erreur
 3. Vérifiez les policies RLS dans **Authentication → Policies**
 
+

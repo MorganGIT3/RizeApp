@@ -26,3 +26,4 @@ AND table_name = 'user_profiles';
 -- après l'inscription, exactement comme lors de la connexion.
 -- =====================================================
 
+

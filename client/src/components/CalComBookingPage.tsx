@@ -249,7 +249,7 @@ export function CalComBookingPage() {
             🎯 Réserver un Appel
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Prenez rendez-vous pour une session d'accompagnement personnalisée avec RizeAppHub™
+            Prenez rendez-vous pour une session d'accompagnement personnalisée avec RizeApps™
           </p>
         </div>
 

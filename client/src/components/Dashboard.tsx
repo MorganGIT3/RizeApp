@@ -92,7 +92,7 @@ export function Dashboard({ onNavigate }: DashboardProps = {}) {
             Dashboard
           </h1>
           <p className="text-xl md:text-2xl text-gray-300">
-            Bienvenue dans votre espace RizeAppHub™
+            Bienvenue dans votre espace RizeApps™
           </p>
         </motion.div>
 
