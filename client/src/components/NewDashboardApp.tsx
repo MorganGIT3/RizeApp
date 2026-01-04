@@ -16,7 +16,8 @@ import {
   Layout,
   ExternalLink,
   ArrowRight,
-  GraduationCap
+  GraduationCap,
+  Github
 } from 'lucide-react';
 import logoImage from '../ChatGPT Image 10 oct. 2025, 21_52_06.png';
 
@@ -686,11 +687,18 @@ interface ExampleAppCardProps {
   description: string;
   previewImage?: string;
   index?: number;
+  githubUrl: string;
 }
 
-const ExampleAppCard = ({ title, url, description, previewImage, index = 0 }: ExampleAppCardProps) => {
-  const handleClick = () => {
+const ExampleAppCard = ({ title, url, description, previewImage, index = 0, githubUrl }: ExampleAppCardProps) => {
+  const handleViewApp = (e: React.MouseEvent) => {
+    e.stopPropagation();
     window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleDownloadCode = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    window.open(githubUrl, '_blank', 'noopener,noreferrer');
   };
 
   const [shouldLoadIframe, setShouldLoadIframe] = useState(false);
@@ -740,7 +748,6 @@ const ExampleAppCard = ({ title, url, description, previewImage, index = 0 }: Ex
         delay: index * 0.1,
         ease: [0.25, 0.46, 0.45, 0.94]
       }}
-      onClick={handleClick}
     >
       {/* Bordure LED animée */}
       <div className="absolute -inset-[1px] rounded-lg overflow-hidden">
@@ -849,11 +856,23 @@ const ExampleAppCard = ({ title, url, description, previewImage, index = 0 }: Ex
         {/* Overlay pour indiquer que c'est cliquable */}
         <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors z-10" />
 
-        {/* Footer avec indication */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 p-4 bg-gradient-to-t from-black/80 to-transparent">
-          <div className="flex items-center justify-center gap-2 text-xs text-white/60 group-hover:text-white transition-colors">
-            <ExternalLink className="w-4 h-4" />
-            <span>Cliquez pour ouvrir dans un nouvel onglet</span>
+        {/* Footer avec boutons */}
+        <div className="absolute bottom-16 left-0 right-0 z-20 p-4 bg-gradient-to-t from-black/80 to-transparent">
+          <div className="flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <button
+              onClick={handleViewApp}
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg text-sm font-medium text-white border border-white/20 hover:border-white/30 transition-all duration-200"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span>Voir l'application</span>
+            </button>
+            <button
+              onClick={handleDownloadCode}
+              className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-lg text-sm font-medium text-white border border-white/20 hover:border-white/30 transition-all duration-200"
+            >
+              <Github className="w-4 h-4" />
+              <span>Télécharger le code complet</span>
+            </button>
           </div>
         </div>
       </div>
@@ -1009,7 +1028,7 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
                 />
                 
                 <GoldCard
-                  name="Framework App"
+                  name="Front-end téléchargeable"
                   className="col-span-1 md:col-span-1"
                   Icon={Layout}
                   background={<FrameworkAppBackground />}
@@ -1092,6 +1111,7 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
                     url="https://c-kcouverture-app.vercel.app/"
                     description="Application de gestion pour couvreurs"
                     index={0}
+                    githubUrl="https://github.com/MorganGIT3/CKcouverture-app"
                   />
                   
                   {/* Carte Planchais */}
@@ -1100,6 +1120,7 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
                     url="https://planchais-app-xvdn.vercel.app/"
                     description="Application de gestion pour plombiers"
                     index={1}
+                    githubUrl="https://github.com/MorganGIT3/PLANCHAIS-app"
                   />
                   
                   {/* Carte AOS Rénov */}
@@ -1108,6 +1129,7 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
                     url="https://aos-renov.vercel.app/"
                     description="Application de gestion pour rénovation"
                     index={2}
+                    githubUrl="https://github.com/MorganGIT3/Aos-Renov"
                   />
                 </div>
               </div>
@@ -1121,7 +1143,7 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
             <div className="relative z-10 p-8 md:p-12 overflow-y-auto" style={{ maxHeight: '100vh' }}>
               <div className="max-w-4xl mx-auto">
                 <h1 className="text-4xl md:text-5xl font-extralight leading-tight tracking-tight text-slate-50 mb-8">
-                  Framework App
+                  Front-end téléchargeable
                 </h1>
                 
                 <div className="space-y-8 text-white/80">
@@ -1299,8 +1321,8 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
             />
           </div>
           <div>
-            <h1 className="text-2xl font-extralight leading-tight tracking-tight text-slate-50">
-              RizeAppHub™
+            <h1 className="text-lg font-extralight leading-tight tracking-tight text-slate-50">
+              RizeApps™
             </h1>
             <p className="text-sm text-white/60">Dashboard</p>
           </div>
