@@ -13,9 +13,10 @@ interface AuthModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAuthSuccess?: () => void;
+  onSignupSuccess?: () => void;
 }
 
-export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps) {
+export function AuthModal({ open, onOpenChange, onAuthSuccess, onSignupSuccess }: AuthModalProps) {
   const { playAuthSound } = useAuthSound();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -130,7 +131,11 @@ export function AuthModal({ open, onOpenChange, onAuthSuccess }: AuthModalProps)
         console.log('   Session:', !!data.session);
         console.log('═══════════════════════════════════════════════');
         
-        onAuthSuccess?.();
+        if (onSignupSuccess) {
+          onSignupSuccess();
+        } else {
+          onAuthSuccess?.();
+        }
         onOpenChange(false);
       } else {
         console.error('❌ AUCUN UTILISATEUR CRÉÉ');

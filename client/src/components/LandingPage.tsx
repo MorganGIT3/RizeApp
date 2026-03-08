@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import LandingPageNew from './LandingPageNew';
 import { AuthModal } from './AuthModal';
 import { OTPVerification } from './OTPVerification';
@@ -12,6 +13,7 @@ interface LandingPageProps {
 }
 
 export function LandingPage({ onLogin }: LandingPageProps) {
+  const navigate = useNavigate();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [otpModalOpen, setOtpModalOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -51,6 +53,15 @@ export function LandingPage({ onLogin }: LandingPageProps) {
     checkAuth();
     // Appeler directement onLogin pour aller à l'onboarding
     onLogin?.();
+  };
+
+  const handleSignupSuccess = () => {
+    // Fermer immédiatement le modal
+    setAuthModalOpen(false);
+    // Vérifier à nouveau la session
+    checkAuth();
+    // Rediriger vers la page vidéo de bienvenue
+    navigate('/welcome-video');
   };
 
   const handleGoClick = () => {
@@ -102,6 +113,7 @@ export function LandingPage({ onLogin }: LandingPageProps) {
         open={authModalOpen} 
         onOpenChange={setAuthModalOpen}
         onAuthSuccess={handleAuthSuccess}
+        onSignupSuccess={handleSignupSuccess}
       />
       
       {/* OTP Modal */}

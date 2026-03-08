@@ -183,9 +183,9 @@ export const IOSDock = ({
           </DockItem>
         )}
 
-        {/* Front-end téléchargeable */}
+        {/* Autres */}
         {onFrameworkClick && (
-          <DockItem tooltip="Front-end téléchargeable" onClick={onFrameworkClick}>
+          <DockItem tooltip="Autres" onClick={onFrameworkClick}>
             <div className={`w-10 h-10 rounded-xl transition-all duration-300 shadow-lg flex items-center justify-center ${
               currentView === '/framework'
                 ? 'bg-gradient-to-br from-white via-gray-100 to-gray-200'

@@ -8,6 +8,8 @@ import { IOSDock } from './IOSDock';
 import { GoldCard } from './DashboardGoldCard';
 import { GoldBentoGrid } from './GoldBentoGrid';
 import { DigitalSerenityBackground } from './DigitalSerenityBackground';
+import PortfolioApp from './PortfolioApp';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   Calendar, 
   BookOpen, 
@@ -900,6 +902,7 @@ const ExampleAppCard = ({ title, url, description, previewImage, index = 0, gith
 export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState('/dashboard');
+  const [showDownloadInfo, setShowDownloadInfo] = useState(false);
 
   // Désactiver le scroll
   useEffect(() => {
@@ -908,6 +911,13 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
       document.body.style.overflow = 'unset';
     };
   }, []);
+
+  // Réinitialiser showDownloadInfo quand on quitte /examples
+  useEffect(() => {
+    if (currentView !== '/examples') {
+      setShowDownloadInfo(false);
+    }
+  }, [currentView]);
 
   // Animation des mots
   useEffect(() => {
@@ -1045,7 +1055,7 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
                 />
                 
                 <GoldCard
-                  name="Front-end téléchargeable"
+                  name="Autres"
                   className="col-span-1 md:col-span-1"
                   Icon={Layout}
                   background={<FrameworkAppBackground />}
@@ -1116,197 +1126,71 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
 
       case '/examples':
         return (
-          <div className="min-h-screen relative overflow-hidden" style={{ overflow: 'hidden', height: '100vh' }}>
-            <div className="relative z-10 p-8 md:p-12 overflow-y-auto" style={{ maxHeight: '100vh' }}>
-              <div className="max-w-7xl mx-auto">
-                <h1 className="text-4xl md:text-5xl font-extralight leading-tight tracking-tight text-slate-50 mb-8 text-center">
-                  Application Exemple
-                </h1>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {/* Carte C-K Couverture */}
-                  <ExampleAppCard
-                    title="C-K Couverture"
-                    url="https://c-kcouverture-app.vercel.app/"
-                    description="Application de gestion pour couvreurs"
-                    index={0}
-                    githubUrl="https://github.com/MorganGIT3/CKcouverture-app"
-                  />
+          <>
+            <div className="min-h-screen relative overflow-hidden" style={{ overflow: 'hidden', height: '100vh' }}>
+              <div className="relative z-10 p-8 md:p-12 overflow-y-auto" style={{ maxHeight: '100vh' }}>
+                <div className="max-w-7xl mx-auto">
+                  <h1 className="text-4xl md:text-5xl font-extralight leading-tight tracking-tight text-slate-50 mb-8 text-center">
+                    Application Exemple
+                  </h1>
                   
-                  {/* Carte Planchais */}
-                  <ExampleAppCard
-                    title="Planchais"
-                    url="https://planchais-app-xvdn.vercel.app/"
-                    description="Application de gestion pour plombiers"
-                    index={1}
-                    githubUrl="https://github.com/MorganGIT3/PLANCHAIS-app"
-                  />
-                  
-                  {/* Carte AOS Rénov */}
-                  <ExampleAppCard
-                    title="AOS Rénov"
-                    url="https://aos-renov.vercel.app/"
-                    description="Application de gestion pour rénovation"
-                    index={2}
-                    githubUrl="https://github.com/MorganGIT3/Aos-Renov"
-                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {/* Carte C-K Couverture */}
+                    <ExampleAppCard
+                      title="C-K Couverture"
+                      url="https://c-kcouverture-app.vercel.app/"
+                      description="Application de gestion pour couvreurs"
+                      index={0}
+                      githubUrl="https://github.com/MorganGIT3/CKcouverture-app"
+                    />
+                    
+                    {/* Carte Planchais */}
+                    <ExampleAppCard
+                      title="Planchais"
+                      url="https://planchais-app-xvdn.vercel.app/"
+                      description="Application de gestion pour plombiers"
+                      index={1}
+                      githubUrl="https://github.com/MorganGIT3/PLANCHAIS-app"
+                    />
+                    
+                    {/* Carte AOS Rénov */}
+                    <ExampleAppCard
+                      title="AOS Rénov"
+                      url="https://aos-renov.vercel.app/"
+                      description="Application de gestion pour rénovation"
+                      index={2}
+                      githubUrl="https://github.com/MorganGIT3/Aos-Renov"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+            <Dialog open={showDownloadInfo} onOpenChange={setShowDownloadInfo}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Information</DialogTitle>
+                  <DialogDescription>
+                    Pour télécharger le code des apps passez votre souris sur les différentes app et cliquez sur "télécharger le code complet"
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+          </>
         );
 
       case '/framework':
         return (
           <div className="min-h-screen relative overflow-hidden" style={{ overflow: 'hidden', height: '100vh' }}>
             <div className="relative z-10 p-8 md:p-12 overflow-y-auto" style={{ maxHeight: '100vh' }}>
-              <div className="max-w-4xl mx-auto">
-                <h1 className="text-4xl md:text-5xl font-extralight leading-tight tracking-tight text-slate-50 mb-8">
-                  Front-end téléchargeable
-                </h1>
-                
-                <div className="space-y-8 text-white/80">
-                  <div>
-                    <p className="text-lg font-semibold text-white mb-2">Niche : BTP</p>
-                    <p className="text-white/70">Exemple : Plombier, Serrurier, Carreleur etc…</p>
-                  </div>
-
-                  <div>
-                    <h2 className="text-2xl font-extralight text-white mb-4">
-                      Fonctionnalités principales de l'application — Niche BTP / Artisans
-                    </h2>
-                    <p className="text-white/60 mb-4">
-                      (Les fonctionnalités en bleu sont essentielles, celles en rouge sont des bonus.)
-                    </p>
-                  </div>
-
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="text-xl font-semibold text-blue-400 mb-4">
-                        Estimation automatique des chantiers (IA intégrée)
-                      </h3>
-                      <p className="mb-3">
-                        Une interface fluide et intuitive permettant à l'entreprise :
-                      </p>
-                      <ul className="space-y-2 ml-6 list-disc">
-                        <li>d'ajouter un chantier existant ;</li>
-                        <li>d'importer plusieurs photos ;</li>
-                        <li>et de renseigner quelques données clés (surface, matériaux, localisation, délai souhaité…).</li>
-                      </ul>
-                      <p className="mt-3 mb-3">
-                        L'IA (via ChatGPT) analyse ces éléments et génère automatiquement :
-                      </p>
-                      <ul className="space-y-2 ml-6">
-                        <li>✅ Une estimation du temps de réalisation</li>
-                        <li>✅ Une liste des matériaux nécessaires selon le métier (plombier, carreleur, électricien, etc.)</li>
-                        <li>✅ Une estimation du nombre d'ouvriers requis</li>
-                        <li>✅ Un coût total prévisionnel avec marge et bénéfice estimés</li>
-                        <li>✅ Un graphique de répartition des coûts (ex. : Transport = 100 €, Main-d'œuvre = 1 200 €, Matériaux = 800 €)</li>
-                        <li>✅ Des recommandations automatiques : "prévoir un échafaudage", "outil spécifique nécessaire", etc.</li>
-                      </ul>
-                      <p className="mt-3 text-white/60">
-                        (Tous les calculs et suggestions sont réalisés via l'IA.)
-                      </p>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-semibold text-blue-400 mb-4">
-                        Mini CRM (Pipeline)
-                      </h3>
-                      <p className="mb-3">
-                        👉 (Dans cette fonctionnalité, il faut intégrer un bouton pour connecter l'email professionnel de l'entreprise
-                      </p>
-                      <p className="mb-3">
-                        Interface avec possibilité de déplacer les prospects sous forme de cards dans différentes colonnes.
-                        À chaque déplacement, un webhook déclenche un workflow qui exécute l'action correspondante.
-                      </p>
-                      
-                      <h4 className="text-lg font-semibold text-white mt-4 mb-2">
-                        Structure des colonnes et automatisations
-                      </h4>
-                      
-                      <div className="space-y-3 ml-4">
-                        <div>
-                          <p className="font-semibold text-white">Colonne : "Tous les prospects"</p>
-                          <p className="text-white/70">→ Colonne par défaut, où arrivent les nouveaux prospects via le formulaire d'inscription.</p>
-                        </div>
-                        
-                        <div>
-                          <p className="font-semibold text-white">Colonne : "Envoi du devis"</p>
-                          <p className="text-white/70">→ Lorsqu'un prospect est déplacé ici, une popup s'affiche avec la visualisation du devis avant envoi (pour vérification).</p>
-                          <p className="text-white/70">→ Le workflow génère le devis et l'envoie à l'adresse email récupérée par le webhook.</p>
-                        </div>
-                        
-                        <div>
-                          <p className="font-semibold text-white">Colonne : "Relance 1"</p>
-                          <p className="text-white/70">→ Lorsqu'un prospect est déplacé ici, une popup s'affiche avec le message de relance (modifiable avant envoi).</p>
-                          <p className="text-white/70">→ Le workflow génère le message et l'envoie automatiquement.</p>
-                        </div>
-                        
-                        <div>
-                          <p className="font-semibold text-white">Colonne : "Relance 2 / 3 / 4"</p>
-                          <p className="text-white/70">→ Identique à la relance 1, avec des messages différents à chaque étape.</p>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-4">
-                        <p className="font-semibold text-white mb-2">Autre partie CRM : envoi automatique d'emails</p>
-                        <p className="mb-3">
-                          Une autre section du CRM permet d'envoyer des emails automatiques (comme un CRM classique).
-                        </p>
-                        <p className="mb-2">Lors de la première utilisation, l'entreprise doit :</p>
-                        <ul className="space-y-1 ml-6 list-disc">
-                          <li>Importer au minimum 5 emails déjà envoyés par son entreprise (pour entraîner l'IA).</li>
-                          <li>Répondre à quelques questions pour que l'IA comprenne le ton, le style et les types de réponses attendues.</li>
-                        </ul>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-semibold text-blue-400 mb-4">
-                        Planning de chantier
-                      </h3>
-                      <p className="text-white/70">
-                        Pas besoin de détail ici : simple calendrier/planning pour suivre les chantiers.
-                      </p>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-semibold text-blue-400 mb-4">
-                        Bilan financier
-                      </h3>
-                      <p className="mb-3">
-                        Possibilité de prendre en photo les tickets de caisse directement depuis l'app.
-                      </p>
-                      <p className="mb-2">
-                        L'IA analyse ensuite automatiquement les dépenses et les classe :
-                      </p>
-                      <ul className="space-y-1 ml-6 list-disc">
-                        <li>Achat de repas</li>
-                        <li>Plein d'essence</li>
-                        <li>Achat de matériaux, etc.</li>
-                      </ul>
-                    </div>
-
-                    <div>
-                      <h3 className="text-xl font-semibold text-blue-400 mb-4">
-                        Équipe
-                      </h3>
-                      <p className="mb-3">
-                        Une section dédiée à la gestion des membres de l'entreprise, utile pour suivre qui fait quoi sur chaque chantier.
-                      </p>
-                      <p className="font-semibold text-white mb-2">Fonctionnalités principales :</p>
-                      <ul className="space-y-2 ml-6">
-                        <li>👤 Ajout / suppression de membres (avec rôle : chef de chantier, ouvrier, commercial, etc.)</li>
-                        <li>🔄 Affectation des membres à un chantier depuis la fiche chantier ou depuis le planning</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-        </div>
-      </div>
-    );
+              <PortfolioApp onNavigate={(view) => {
+                if (view === '/examples') {
+                  setShowDownloadInfo(true);
+                }
+                setCurrentView(view);
+              }} />
+            </div>
+          </div>
+        );
 
       case '/account':
         return <AccountPage onLogout={handleLogout} />;

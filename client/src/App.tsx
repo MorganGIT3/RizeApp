@@ -8,6 +8,7 @@ import { LandingPage } from "@/components/LandingPage";
 import { Integrations } from "@/components/Integrations";
 import { NewDashboardApp } from "@/components/NewDashboardApp";
 import { OnboardingPage } from "@/components/OnboardingPage";
+import { WelcomeVideoPage } from "@/components/WelcomeVideoPage";
 import { AdminDashboard } from "@/components/AdminDashboard";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { ResetPasswordPage } from "@/components/ResetPasswordPage";
@@ -18,6 +19,10 @@ function App() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
+    navigate('/onboarding');
+  };
+
+  const handleWelcomeVideoComplete = () => {
     navigate('/onboarding');
   };
 
@@ -46,6 +51,14 @@ function App() {
             <Routes>
               <Route path="/" element={<LandingPage onLogin={handleLogin} />} />
               <Route path="/landingpage" element={<LandingPage onLogin={handleLogin} />} />
+              <Route 
+                path="/welcome-video" 
+                element={
+                  <ProtectedRoute>
+                    <WelcomeVideoPage onContinue={handleWelcomeVideoComplete} />
+                  </ProtectedRoute>
+                } 
+              />
               <Route 
                 path="/onboarding" 
                 element={

@@ -10,13 +10,13 @@ export function SimpleCalComRedirect() {
 
   const handleButtonClick = () => {
     // Rediriger directement vers cal.com
-    window.open('https://cal.com/smartappacademy/rizecall', '_blank', 'noopener,noreferrer')
+    window.open('https://cal.com/zerotoapp/30minrizecall', '_blank', 'noopener,noreferrer')
   }
 
   const handleConfirm = () => {
     setIsRedirecting(true)
     // Rediriger vers cal.com
-    window.open('https://cal.com/smartappacademy/rizecall', '_blank', 'noopener,noreferrer')
+    window.open('https://cal.com/zerotoapp/30minrizecall', '_blank', 'noopener,noreferrer')
   }
 
   const handleCancel = () => {
