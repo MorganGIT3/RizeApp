@@ -511,12 +511,12 @@ const FrameworkAppHoverAnimation = () => (
   </div>
 );
 
-// Composant pour la carte Formation avec visuel Notion
+// Composant pour la carte Formation (redirection vers Whop)
 const FormationNotionCard = () => {
-  const notionUrl = "https://tarry-parrotfish-a73.notion.site/RizeApp-Academy-Cr-e-lance-et-vends-ton-application-IA-no-code-des-entreprises-281c766a5d1181bfac04e3b924367e18?source=copy_link";
+  const formationUrl = "https://whop.com/joined/rizeapps/";
   
   const handleClick = () => {
-    window.open(notionUrl, '_blank', 'noopener,noreferrer');
+    window.open(formationUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (

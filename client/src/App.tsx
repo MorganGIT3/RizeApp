@@ -12,6 +12,7 @@ import { WelcomeVideoPage } from "@/components/WelcomeVideoPage";
 import { AdminDashboard } from "@/components/AdminDashboard";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { ResetPasswordPage } from "@/components/ResetPasswordPage";
+import { FormPage } from "@/components/FormPage";
 import { signOutUser } from "@/lib/supabase";
 import { ErrorBoundary } from "./ErrorBoundary";
 
@@ -78,6 +79,7 @@ function App() {
               <Route path="/integrations" element={<Integrations />} />
               <Route path="/admin-dashboard" element={<AdminDashboard />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
+              <Route path="/form" element={<FormPage />} />
             </Routes>
             <Toaster />
           </ThemeProvider>
