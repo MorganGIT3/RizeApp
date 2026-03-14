@@ -1033,7 +1033,7 @@ export function NewDashboardApp({ onLogout }: NewDashboardAppProps) {
                   Icon={Calendar}
                   background={<CallBookingBackground />}
                   hoverContent={<CallBookingHoverAnimation />}
-                  onClick={() => window.open('https://cal.com/smartappacademy/rizecall', '_blank', 'noopener,noreferrer')}
+                  onClick={() => window.open('https://cal.com/zerotoapp/30minrizecall', '_blank', 'noopener,noreferrer')}
                 />
                 
                 <GoldCard
